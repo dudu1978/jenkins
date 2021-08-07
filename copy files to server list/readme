@@ -43,6 +43,36 @@ This stage will be run only if "copy_flow_xml_file"  was set to 'yes' - the Valu
 		1. print "going to copy file"
 		2. ssh to to NIFI server and copy flow.xml
 		3. SSh to NIFI server and restart the nifi service
+
+
 		
-		
+##### Version 4 ######
+In version 4 I have added the UI option that user can choose on which server to copy the file and enable or diable stage 2.
+
+This version requires pipleline and job configuraion.
+
+In the job configuration 
+1. enable This project is parameterized
+2. Choose extended choice paramter
+3. Define the paramter name - in the example is Server 
+4. Add description
+5. In the Type choose multi select 
+6. Define the delimiter is , (9comma)
+7. In teh value files , add the server IPs
+
+8.Add addtional paramter
+9.choose boolean parameter 
+10. define the parameter name - in our example is "Copy flow.xml" 
+
+
+stage 1 : 
+1. clone nifi git
+
+Stage 2 :
+This stage will be run only if "copy_flow_xml_file"  was set to 'true'
+1. Go to Nifi_1_Sensor_Gateway dir
+2. Call nifi_copy function that run the follwoing on each nifi IP that is defined under servers
+		1. print "going to copy file"
+		2. ssh to to NIFI server and copy flow.xml
+		3. SSh to NIFI server and restart the nifi service
 		
