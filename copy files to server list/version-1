@@ -12,7 +12,7 @@ pipeline {
 			     
                 dir('Nifi_1_Sensor_Gateway') {				 
 					          sh 'echo hello world'
-					          sh 'scp flow.xml.gz 10.1.1.1:/data/jenkins'
+					          sh 'scp flow.xml.gz user@10.1.1.1:/data/jenkins'
 			}    }
         }
     }
