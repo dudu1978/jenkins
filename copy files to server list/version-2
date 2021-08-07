@@ -23,9 +23,9 @@ pipeline {
 
 def nifi_copy(list) {
     list.each { item ->
-	 	sh "echo Copy flow.xml to /data/nifi/conf"
+	 	sh "echo going to copy file"
 		sh "scp flow.xml.gz user@${item}:/data/jenkins"
-    sh "ssh user@${item} /bin/bash << /data/nifi/nifi.sh restart"
+                sh "ssh user@${item} /bin/bash << /data/nifi/nifi.sh restart"
 
     }
 }
