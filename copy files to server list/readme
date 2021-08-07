@@ -1,0 +1,9 @@
+This project describe a pipeline that copy\deploy files from a branch to one or more server.  Each version inlcudes more feature 
+
+1. The Job should run manaully 
+2. User should choose on which server to deploy 
+3. User should choose the stage to run - Up till version 5 there is a single stage to run
+
+
+
+
