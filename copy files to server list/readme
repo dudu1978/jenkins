@@ -26,3 +26,23 @@ Stage 2 :
 		2. ssh to to NIFI server and copy flow.xml
 		3. SSh to NIFI server and restart the nifi service
 		
+
+
+##### Version 3 ######
+In version 3 i have added the option to run stage 2 only if copy_flow_xml_file = 'yes'. This is done by using WHEN option.  I have added 2 examples for the WHEN option 
+
+- Create new value based on a list
+
+stage 1 : 
+1. clone nifi git
+
+Stage 2 :
+This stage will be run only if "copy_flow_xml_file"  was set to 'yes' - the Value can be located under "environment" section
+1. Go to Nifi_1_Sensor_Gateway dir
+2. Call nifi_copy function that run the follwoing on each nifi IP that is part of the defined list (nifi_fe_servers)
+		1. print "going to copy file"
+		2. ssh to to NIFI server and copy flow.xml
+		3. SSh to NIFI server and restart the nifi service
+		
+		
+		
