@@ -1,0 +1,19 @@
+pipeline {
+    agent { label 'client-1' }
+
+    stages {
+        stage('Connect to git') {
+            steps {
+                    git branch: 'develop', credentialsId: 'user-token', url: 'https://bitbucket.xxx.local:8443/scm/nifi.git'
+			}
+        }
+		stage ('print') {
+		    steps {
+			     
+                dir('Nifi_1_Sensor_Gateway') {				 
+					          sh 'echo hello world'
+					          sh 'scp flow.xml.gz 10.1.1.1:/data/jenkins'
+			}    }
+        }
+    }
+}
