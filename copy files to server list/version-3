@@ -1,0 +1,35 @@
+nifi_fe_servers =['10.1.1.1','10.2.2.2']
+
+
+pipeline {
+    environment {
+	copy_flow_xml_file = 'yes'
+    }
+	agent { label 'client-1' }
+
+    stages {
+        stage('Connect to git') {
+            steps {
+                    git branch: 'develop', credentialsId: 'user-token', url: 'https://bitbucket.xxx.local:8443/scm/nifi.git'
+			}
+        }
+		stage ('Copy flow.xml') {
+		    //when { expression  { "${copy_flow_xml_file}" == 'yes' }}
+			when  { environment name: 'copy_flow_xml_file', value: 'yes' }
+		    steps {
+				dir('Nifi_1_Sensor_Gateway') {
+					nifi_copy(nifi_fe_servers)
+            	}
+			}
+        }
+    }
+}
+
+def nifi_copy(list) {
+    list.each { item ->
+	 	sh "echo Copy flow.xml to /data/nifi/conf"
+		sh "scp flow.xml.gz user@${item}:/data/jenkins"
+        sh "ssh user@${item} /bin/bash << /data/nifi/nifi.sh restart"
+
+    }
+}
