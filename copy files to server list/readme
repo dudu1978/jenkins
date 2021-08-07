@@ -1,1 +1,16 @@
 This project describe a pipeline that copy\deploy files from a branch to one or more server. Each version includes mopre feature 
+
+##### Version 1 ######
+
+stage 1 : 
+1. clone nifi git
+
+Stage 2 :
+1. Go to Nifi_1_Sensor_Gateway dir
+2. print "going to copy file"
+3. ssh to to NIFI server and copy flow.xml
+
+
+##### Version 2 ######
+In version 2 i have added a function that runs step 2 and added server list
+
