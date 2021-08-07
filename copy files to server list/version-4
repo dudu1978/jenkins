@@ -1,0 +1,26 @@
+pipeline {
+	agent { label 'client-1' }
+
+    stages {
+        stage('Connect to git') {
+            steps {
+                    git branch: 'develop', credentialsId: 'user-token', url: 'https://bitbucket.xxx.local:8443/scm/nifi.git'
+			}
+        }
+		stage ('Copy flow.xml') {
+			when  { environment name: 'Copy flow.xml', value: 'true' }
+		    steps {
+				dir('Nifi_1_Sensor_Gateway') {
+					nifi_copy()
+            	}
+			}
+        }
+    }
+}
+
+def nifi_copy() {
+    params.Servers.split(',').each { server ->
+	 	sh "going to copy file"
+		sh "scp flow.xml.gz user@${server}:/data"
+    }
+}
