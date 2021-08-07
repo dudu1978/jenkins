@@ -1,0 +1,35 @@
+pipeline {
+    parameters {
+        extendedChoice(name: 'Servers', description: 'Select servers for deployment', multiSelectDelimiter: ',',
+                type: 'PT_CHECKBOX', value: '10.1.1.1,10.2.2.2', visibleItemCount: 5)
+        booleanParam(name: 'Copy flow.xml', defaultValue: false)
+    }
+	agent { label 'client-1' }
+
+    stages {
+        stage('Connect to git') {
+            steps {
+                    git branch: 'develop', credentialsId: 'user-token', url: 'https://bitbucket.xxx.local:8443/scm/nifi.git'
+			}
+        }
+		stage ('Copy flow.xml') {
+			when  { environment name: 'Copy flow.xml', value: 'true' }
+		    steps {
+				dir('Nifi_1_Sensor_Gateway') {
+					nifi_copy()
+            	}
+			}
+        }
+    }
+}
+
+//@NonCPS // has to be NonCPS or the build breaks on the call to .each
+// CPS - https://www.jenkins.io/doc/book/pipeline/cps-method-mismatches/
+// CPS - Jenkins Pipeline uses a library called Groovy CPS to run Pipeline scripts.
+def nifi_copy() {
+    params.Servers.split(',').each { server ->
+	 	sh "echo Copy flow.xml to /data/nifi/conf"
+		sh "scp flow.xml.gz user@${item}:/data/jenkins"
+        sh "ssh user@${item} /bin/bash << /data/nifi/nifi.sh restart"
+    }
+}
