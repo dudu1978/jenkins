@@ -75,4 +75,4 @@ This stage will be run only if "copy_flow_xml_file"  was set to 'true'
 		1. print "going to copy file"
 		2. ssh to to NIFI server and copy flow.xml
 		3. SSh to NIFI server and restart the nifi service
-		
+When running the Job the user should choose teh IP he wish to copy the files and enable or diable the file copy 
