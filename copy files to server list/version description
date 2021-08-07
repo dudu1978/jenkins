@@ -1,0 +1,102 @@
+
+##### Version 1 ######
+
+stage 1 : 
+1. clone nifi git
+
+Stage 2 :
+1. Go to Nifi_1_Sensor_Gateway dir
+2. print "going to copy file"
+3. ssh to to NIFI server and copy flow.xml
+
+
+##### Version 2 ######
+In version 2 i have added a function that runs step 2 and added server list
+
+- Create new value based on a list
+
+stage 1 : 
+1. clone nifi git
+
+Stage 2 :
+1. Go to Nifi_1_Sensor_Gateway dir
+2. Call nifi_copy function that run the follwoing on each nifi IP that is part of the defined list (nifi_fe_servers)
+		1. print "going to copy file"
+		2. ssh to to NIFI server and copy flow.xml
+		3. SSh to NIFI server and restart the nifi service
+		
+
+
+##### Version 3 ######
+In version 3 i have added the option to run stage 2 only if copy_flow_xml_file = 'yes'. This is done by using WHEN option.  I have added 2 examples for the WHEN option 
+
+- Create new value based on a list
+
+stage 1 : 
+1. clone nifi git
+
+Stage 2 :
+This stage will be run only if "copy_flow_xml_file"  was set to 'yes' - the Value can be located under "environment" section
+1. Go to Nifi_1_Sensor_Gateway dir
+2. Call nifi_copy function that run the follwoing on each nifi IP that is part of the defined list (nifi_fe_servers)
+		1. print "going to copy file"
+		2. ssh to to NIFI server and copy flow.xml
+		3. SSh to NIFI server and restart the nifi service
+
+
+		
+##### Version 4 ######
+In version 4 I have added the UI option that user can choose on which server to copy the file and enable or diable stage 2.
+
+This version requires pipleline and job configuraion.
+
+In the job configuration 
+1. enable This project is parameterized
+2. Choose extended choice paramter
+3. Define the paramter name - in the example is Server 
+4. Add description
+5. In the Type choose multi select 
+6. Define the delimiter is , (9comma)
+7. In teh value files , add the server IPs
+
+8.Add addtional paramter
+9.choose boolean parameter 
+10. define the parameter name - in our example is "Copy flow.xml" 
+
+
+stage 1 : 
+1. clone nifi git
+
+Stage 2 :
+This stage will be run only if "copy_flow_xml_file"  was set to 'true'
+1. Go to Nifi_1_Sensor_Gateway dir
+2. Call nifi_copy function that run the follwoing on each nifi IP that is defined under servers
+		1. print "going to copy file"
+		2. ssh to to NIFI server and copy flow.xml
+		3. SSh to NIFI server and restart the nifi service
+When running the Job the user should choose teh IP he wish to copy the files and enable or diable the file copy 
+
+
+
+
+##### Version 5 ######
+version 5 is the same as version 4 - but instead for running the project  parameterized manually - All the configuration is defined as part of the pipeline.
+Please note that changes can be visible in the UI only after clicking "Build with params option"
+
+- Define the server list as part of  check box  - In version 4 i have defined it as multi select 
+- Define copy flow.xml 
+
+
+stage 1 : 
+1. clone nifi git
+
+Stage 2 :
+This stage will be run only if "copy flow.xml"  was set to 'true'
+1. Go to Nifi_1_Sensor_Gateway dir
+2. Call nifi_copy function that run the follwoing on each nifi IP that is defined under servers
+		1. print "going to copy file"
+		2. ssh to to NIFI server and copy flow.xml
+		3. SSh to NIFI server and restart the nifi service
+		
+		
+Please note that only on the second time when you run the job the UI will be presented  
