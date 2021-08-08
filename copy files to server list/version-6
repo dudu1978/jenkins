@@ -1,0 +1,54 @@
+ssh_user_name='zolo'
+nifi_fe_conf_path='/data/nifi/conf'
+
+pipeline {
+	parameters {
+        extendedChoice(name: 'Servers', description: 'Select servers for deployment', multiSelectDelimiter: ',',
+                type: 'PT_CHECKBOX', value: '10.1.1.1,10.2.2.2', visibleItemCount: 5)
+        booleanParam(name: 'Copy flow.xml file', defaultValue: false)
+		booleanParam(name: 'Copy nifi.flow.properties file', defaultValue: false)
+		
+    }
+	agent { label 'client-1' }
+
+    stages {
+        stage('Connect to git') {
+            steps {
+                    git branch: 'develop', credentialsId: 'user-token', url: 'https://bitbucket.xxx.local:8443/scm/nifi.git'
+			}
+        }
+		stage ('Copy NIFI FE flow.xml file') {
+			when  { environment name: 'Copy flow.xml file', value: 'true' }
+		    steps {
+				dir('Nifi_1_Sensor_Gateway') {
+					copy_nifi_fe_flow_xml_file()
+            	}
+			}
+        }
+		
+		stage ('Copy nifi.flow.properties file') {
+			when  { environment name: 'Copy nifi.flow.properties file', value: 'true' }
+		    steps {
+				dir('Nifi_1_Sensor_Gateway') {
+					copy_nifi_flow_properties_file()
+            	}
+			}
+        }
+
+    }
+}
+
+def copy_nifi_fe_flow_xml_file() {
+    params.Servers.split(',').each { server ->
+	 	sh "echo Copy flow.xml to ${nifi_fe_conf_path}"
+		sh "scp flow.xml.gz ${ssh_user_name}@${server}:${nifi_fe_conf_path}"
+        sh "ssh ${ssh_user_name}@${server} /bin/bash << /data/nifi/nifi.sh stop"
+    }
+}
+def copy_nifi_flow_properties_file() {
+    params.Servers.split(',').each { server ->
+	 	sh "echo Schma to ${nifi_fe_conf_path}"
+		sh "scp nifi.flow.properties ${ssh_user_name}@${server}:${nifi_fe_conf_path}"
+        sh "ssh ${ssh_user_name}@${server} /bin/bash << /data/nifi/nifi.sh stop"
+    }
+}
