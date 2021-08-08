@@ -1,8 +1,8 @@
 This project describe a pipeline that copy\deploy files from a branch to one or more server.  Each version inlcudes more feature 
 
 1. The Job should run manaully 
-2. User should choose on which server to deploy 
-3. User should choose the stage to run - Up till version 5 there is a single stage to run
+2. User should choose on which servers to copy the files 
+3. User should choose the stage to run - Up till version 5 there is a single stage to run. on version 6 you have 2 stages ,each copy diffrent file 
 
 In order for the SSH to work it is required to perform ssh-copy-id from jenkins client server to the required servers
 
