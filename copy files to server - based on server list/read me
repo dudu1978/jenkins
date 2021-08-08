@@ -4,6 +4,8 @@ This project describe a pipeline that copy\deploy files from a branch to one or 
 2. User should choose on which server to deploy 
 3. User should choose the stage to run - Up till version 5 there is a single stage to run
 
+In order for the SSH to work it is required to perform ssh-copy-id from jenkins client server to the required servers
+
 
 
 
