@@ -74,7 +74,7 @@ This stage will be run only if "copy_flow_xml_file"  was set to 'true'
 		1. print "going to copy file"
 		2. ssh to to NIFI server and copy flow.xml
 		3. SSh to NIFI server and restart the nifi service
-When running the Job the user should choose teh IP he wish to copy the files and enable or diable the file copy 
+When running the Job the user should choose teh IP he wish to copy the files and enable or disable the file copy 
 
 
 
@@ -99,4 +99,31 @@ This stage will be run only if "copy flow.xml"  was set to 'true'
 		3. SSh to NIFI server and restart the nifi service
 		
 		
-Please note that only on the second time when you run the job the UI will be presented  
+Please note that only on the second time when you run the job the UI will be updated  
+
+
+##### Version 6 ######
+
+- Define SSH user as paranter 
+- Adding addtional boolean paramter for new stage 
+- Adding addtioanl function that copy nifi.flow.file --> This stage will run based on when 
+
+
+stage 1 : 
+1. clone nifi git
+
+Stage 2 :
+This stage will be run only if "copy flow.xml"  was set to 'true'
+1. Go to Nifi_1_Sensor_Gateway dir
+2. Call nifi_copy function that run the follwoing on each nifi IP that is defined under servers
+		1. print "going to copy file"
+		2. ssh to to NIFI server and copy flow.xml
+		3. SSh to NIFI server and restart the nifi service
+
+Stage 3 :
+This stage will be run only if "copy flow.xml"  was set to 'true'
+1. Go to Nifi_1_Sensor_Gateway dir
+2. Call nifi_copy function that run the follwoing on each nifi IP that is defined under servers
+		1. print "going to copy file"
+		2. ssh to to NIFI server and copy nifi.flow.proprties file
+		3. SSh to NIFI server and restart the nifi service	
