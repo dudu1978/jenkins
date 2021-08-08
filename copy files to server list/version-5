@@ -29,7 +29,7 @@ pipeline {
 def nifi_copy() {
     params.Servers.split(',').each { server ->
 	 	sh "echo Copy flow.xml to /data/nifi/conf"
-		sh "scp flow.xml.gz user@${item}:/data/jenkins"
-        sh "ssh user@${item} /bin/bash << /data/nifi/nifi.sh restart"
+		sh "scp flow.xml.gz user@${server}:/data/jenkins"
+        sh "ssh user@${server} /bin/bash << /data/nifi/nifi.sh restart"
     }
 }
