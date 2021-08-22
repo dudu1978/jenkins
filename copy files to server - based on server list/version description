@@ -126,4 +126,13 @@ This stage will be run only if "copy flow.xml"  was set to 'true'
 2. Call nifi_copy function that run the follwoing on each nifi IP that is defined under servers
 		1. print "going to copy file"
 		2. ssh to to NIFI server and copy nifi.flow.proprties file
-		3. SSh to NIFI server and restart the nifi service	
+		3. SSh to NIFI server and restart the nifi service
+		
+		
+		
+##### Version 7 ######
+
+1. Adding more steps 
+2. In the server description instead of IP only i have added the server description and IP in the follwoing format  <server_description-ip>
+   In each funcation i'm scraping the description and taking only the IP
+
