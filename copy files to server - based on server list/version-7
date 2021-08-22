@@ -1,0 +1,95 @@
+ssh_user_name='zolo'
+nifi_fe_conf_path='/data/nifi/conf'
+
+
+pipeline {
+	parameters {
+        extendedChoice(name: 'Servers', description: 'Select servers for deployment', multiSelectDelimiter: ',',
+                type: 'PT_CHECKBOX', value: 'NIFi_FE_1-1.1.1.1,NIFi_FE_2-2.2.2', visibleItemCount: 5)
+        booleanParam(name: 'Copy flow.xml file', defaultValue: false)
+		booleanParam(name: 'Copy nifi.flow.properties file', defaultValue: false)
+		booleanParam(name: 'Copy deployment scripts', defaultValue: false)
+		booleanParam(name: 'Restart NIFI - This is a must after updating the nifi configuration', defaultValue: false)
+		booleanParam(name: 'echo message - Internal test only', defaultValue: false)
+		
+		
+    }
+	agent { label 'client' }
+
+    stages {
+        stage('Connect to git') {
+            steps {
+                    git branch: 'develop', credentialsId: 'user-token', url: 'https://bitbucket.xxx.local:8443/scm/nifi.gi'
+			}
+        }
+		stage ('Copy NIFI FE flow.xml file') {
+			when  { environment name: 'Copy flow.xml file', value: 'true' }
+		    steps {
+				dir('Nifi_1_Sensor_Gateway') {
+					copy_nifi_fe_flow_xml_file()
+            	}
+			}
+        }
+		
+		stage ('Copy nifi.flow.properties file') {
+			when  { environment name: 'Copy nifi.flow.properties file', value: 'true' }
+		    steps {
+				dir('Nifi_1_Sensor_Gateway') {
+					copy_nifi_flow_properties_file()
+            	}
+			}
+        }
+		stage ('Copy deployment scripts') {
+			when  { environment name: 'Copy deployment scripts', value: 'true' }
+		    steps {
+				dir('Nifi_Deployment_Scripts') {
+					Copy_deployment_scripts()
+            	}
+			}
+        }
+		stage ('Restart Nifi') {
+			when  { environment name: 'Restart NIFI - This is a must after updating the nifi configuration', value: 'true' }
+		    steps {
+				restart_nifi()
+            	}
+			}
+		stage ('echo test message') {
+			when  { environment name: 'echo message - Internal test only', value: 'true' }
+		    steps {
+				echo_test()
+            	}
+			}
+    }
+}
+//@NonCPS // has to be NonCPS or the build breaks on the call to .each
+// CPS - https://www.jenkins.io/doc/book/pipeline/cps-method-mismatches/
+// CPS - Jenkins Pipeline uses a library called Groovy CPS to run Pipeline scripts.
+def copy_nifi_fe_flow_xml_file() {
+    params.Servers.split(',').each { item -> server = item.split('-').last()
+	 	sh "echo Copy flow.xml to ${nifi_fe_conf_path}"
+		sh "scp flow.xml.gz ${ssh_user_name}@${server}:${nifi_fe_conf_path}"
+    }
+}
+def copy_nifi_flow_properties_file() {
+    params.Servers.split(',').each { item -> server = item.split('-').last()
+	 	sh "echo copy nifi.flow.properties to ${nifi_fe_conf_path}"
+		sh "scp nifi.flow.properties ${ssh_user_name}@${server}:${nifi_fe_conf_path}"
+    }
+}
+def Copy_deployment_scripts() {
+    params.Servers.split(',').each { item -> server = item.split('-').last()
+	 	sh "echo copy deployment script to ${nifi_fe_conf_path}"
+		sh "scp -r scripts ${ssh_user_name}@${server}:${nifi_fe_conf_path}"
+    }
+}
+def restart_nifi() {
+    params.Servers.split(',').each { item -> server = item.split('-').last()
+        sh "echo NIFI is restarting"
+		sh "ssh ${ssh_user_name}@${server} /data/nifi/bin/nifi.sh restart"
+    }
+}
+def echo_test() {
+    params.Servers.split(',').each { item -> server = item.split('-').last()
+		sh "ssh ${ssh_user_name}@${server} echo THIS IS A TEST MESSAGE RUNNING ON ${server}"
+    }
+}
